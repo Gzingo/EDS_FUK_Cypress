@@ -1,0 +1,48 @@
+{
+  "name": "eds-fuk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "@eslint/css": "^0.13.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.38.0",
+    "@eslint/json": "^0.13.2",
+    "@eslint/markdown": "^7.4.0",
+    "cypress": "^15.10.0",
+    "cypress-mochawesome-reporter": "^4.0.2",
+    "cypress-real-events": "^1.15.0",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-cypress": "^5.2.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.0.1"
+  },
+  "scripts": {
+    "clean": "node clean.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .--ext .js,.json",
+    "format": "prettier --write",
+    "cy:run": "npm run clean && npx cypress run",
+    "cy:run:chrome": "npm run clean && npx cypress run --browser chrome",
+    "cy:run:edge": "npm run clean && npx cypress run --browser edge",
+    "cy:run:firefox": "npm run clean && npx cypress run --browser firefox",
+    "cy:parallel": "npm run clean && cypress-parallel -s cy:run -t 4 -d cypress/e2e/**/*.js",
+    "cy:parallel:chrome": "npm run clean && cypress-parallel -s cy:run:chrome -t 4 -d cypress/e2e/**/*.js",
+    "cy:parallel:edge": "npm run clean && cypress-parallel -s cy:run:edge -t 4 -d cypress/e2e/**/*.js",
+    "cy:parallel:firefox": "npm run clean && cypress-parallel -s cy:run:firefox -t 4 -d cypress/e2e/**/*.js",
+    "cy:test:headless:3x": "npm run clean && node runThreeTimes.js",
+    "cy:test:cherrypick": "npm run clean && npx cypress run --browser chrome --spec \"cypress/e2e/login_test.js\""
+  },
+  "keywords": [],
+  "author": "Nikola Nikolic",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cypress-parallel": "^0.1.7",
+    "dayjs": "^1.11.18"
+  }
+}
