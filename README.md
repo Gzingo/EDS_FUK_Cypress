@@ -1,113 +1,90 @@
-# EDS FUK - Cypress Test Automation Framework
+# EDS FUK - Cypress E2E Test Suite
 
-Test automation framework for EDS FUK (Financial Management and Control) system. Built with Cypress and JavaScript using Page Object Model architecture.
+Automated E2E test suite for the EDS FUK (Financial Management and Control) system — covering login security, annual report workflows, and process list/map approval flows across multiple user roles.
+
+Built with Cypress and JavaScript using Page Object Model architecture.
+
+> **Note:** This is a sanitized portfolio version. All internal URLs and credentials have been removed.
 
 ## Tech Stack
 
-- **Cypress** with JavaScript
-- **Page Object Model** for UI abstraction
-- **API-based login** for fast test setup
-- **cypress-mochawesome-reporter** for HTML reports
-- **cypress-parallel** for parallel test execution
-- **dotenv** for environment configuration
-- **ESLint + Prettier** for code quality
+- **Cypress 15.12.0** — E2E test framework
+- **cypress-mochawesome-reporter 4.0.2** — HTML test reporting
+- **cypress-parallel 0.1.7** — parallel test execution
+- **cypress-real-events 1.15.0** — native browser events
+- **dayjs 1.11.18** — date/time manipulation
+- **dotenv 17.2.3** — environment configuration
+- **ESLint 9.38.0 + Prettier 3.6.2** — code quality
 
-## Project Structure
+## Prerequisites
 
-```
-EDS_FUK_UI/
-├── cypress/
-│   ├── e2e/                            # Test specs
-│   │   ├── login_test.js               # Login tests (positive, negative, security)
-│   │   ├── godisnji_izvestaj.js        # Annual report workflow tests
-│   │   ├── odobravanje_liste_procesa.js # Process list approval tests
-│   │   └── odobravanje_mape_procesa.js  # Process map approval tests
-│   ├── fixtures/                        # Test data & file uploads
-│   │   ├── users.json
-│   │   ├── profile.json
-│   │   ├── ExcelDoc.xlsx
-│   │   ├── PdFDoc.pdf
-│   │   └── WordDoc.docx
-│   └── support/
-│       ├── commands.js                  # Custom Cypress commands
-│       ├── dateUtils.js                 # Date utility functions
-│       ├── e2e.js                       # Global hooks & imports
-│       └── pageObjects/
-│           ├── loginPage.js             # Login page interactions
-│           ├── loginPageAsserts.js      # Login page assertions
-│           ├── loginAPI.js              # API-based authentication
-│           ├── appNavigation.js         # App navigation helpers
-│           ├── navigationAssertion.js   # Navigation assertions
-│           ├── godisnjiIzvestaj.js      # Annual report page object
-│           ├── processList.js           # Process list page object
-│           └── processMap.js            # Process map page object
-├── cypress.config.js                    # Cypress configuration
-├── package.json                         # Dependencies & npm scripts
-├── Jenkinsfile                          # CI/CD pipeline definition
-├── .env.example                         # Environment variables template
-├── .eslintrc.json                       # ESLint configuration
-├── .prettierrc                          # Prettier configuration
-└── clean.js                             # Pre-run cleanup script
-```
+- **Node.js** v18+
+- **npm** v9+
+- **Browser:** Chrome, Edge or Firefox
 
-## Setup
-
-### Prerequisites
-
-- Node.js >= 18
-- npm
-
-### Installation
+## Installation
 
 ```bash
-git clone https://github.com/Gzingo/EDS_FUK_Cypress.git
-cd EDS_FUK_Cypress/EDS_FUK_UI
 npm install
+cp .env.example .env   # fill in credentials
 ```
-
-### Environment Configuration
-
-Copy `.env.example` to `.env` and fill in your credentials:
-
-```bash
-cp .env.example .env
-```
-
-Required variables:
-- `CYPRESS_BASE_URL` - Application URL
-- Role credentials (Admin, User 1, User 2, Director)
-- Invalid credentials for negative tests
-- SQL injection test payloads
 
 ## Running Tests
 
 ```bash
-npm run cy:run              # Headless (default browser)
-npm run cy:run:chrome       # Headless Chrome
-npm run cy:run:edge         # Headless Edge
-npm run cy:run:firefox      # Headless Firefox
-npm run cy:parallel         # Parallel execution (4 threads)
-npm run cy:parallel:chrome  # Parallel Chrome
-npm run cy:test:headless:3x # Run 3 times consecutively
-npm run cy:test:cherrypick  # Run specific spec (login_test)
-```
+# All tests headless (default browser)
+npm run cy:run
 
-### Open Cypress UI
+# Specific browser
+npm run cy:run:chrome
+npm run cy:run:edge
+npm run cy:run:firefox
 
-```bash
+# Cypress GUI (interactive)
 npx cypress open
+
+# Parallel execution (4 threads)
+npm run cy:parallel
+npm run cy:parallel:chrome
+npm run cy:parallel:edge
+npm run cy:parallel:firefox
+
+# Run 3 times consecutively
+npm run cy:test:headless:3x
+
+# Run specific spec (login_test)
+npm run cy:test:cherrypick
 ```
 
-## Test Coverage
+## Project Structure
 
-| Test Suite | Description |
-|------------|-------------|
-| `login_test.js` | Login positive/negative/security tests |
-| `godisnji_izvestaj.js` | Annual report creation & workflow |
-| `odobravanje_liste_procesa.js` | Process list approval workflow |
-| `odobravanje_mape_procesa.js` | Process map approval workflow |
+```
+cypress/
+  e2e/                            # Test specs
+    login_test.js                 # Login tests (positive, negative, security)
+    godisnji_izvestaj.js          # Annual report workflow tests
+    odobravanje_liste_procesa.js  # Process list approval tests
+    odobravanje_mape_procesa.js   # Process map approval tests
+  fixtures/                       # Test data & file uploads
+    users.json
+    profile.json
+    ExcelDoc.xlsx, PdFDoc.pdf, WordDoc.docx
+  support/
+    commands.js                   # Custom Cypress commands
+    dateUtils.js                  # Date utility functions
+    e2e.js                        # Global hooks & imports
+    pageObjects/
+      loginPage.js                # Login page interactions
+      loginPageAsserts.js         # Login page assertions
+      loginAPI.js                 # API-based authentication
+      appNavigation.js            # App navigation helpers
+      navigationAssertion.js      # Navigation assertions
+      godisnjiIzvestaj.js         # Annual report page object
+      processList.js              # Process list page object
+      processMap.js               # Process map page object
+```
 
-## Key Patterns
+## Architecture
 
 ### API-Based Login
 
@@ -122,7 +99,7 @@ loginAPI.loginAsAdmin();
 
 ### Page Object Model
 
-UI interactions encapsulated in reusable page objects:
+UI interactions encapsulated in reusable page objects with separate assertion classes:
 
 ```javascript
 import LoginPage from '../support/pageObjects/loginPage';
@@ -133,10 +110,65 @@ loginPage.enterPassword('password');
 loginPage.clickLogin();
 ```
 
-## Reports
+### Cleanup (clean.js)
 
-After test execution, HTML reports are generated via `cypress-mochawesome-reporter`. Open the report:
+Every `npm run cy:*` command runs `npm run clean` before tests, which deletes:
+- `cypress/screenshots/`
+- `cypress/videos/`
+- `cypress/reports/`
 
-```bash
-open cypress/reports/html/index.html
+## Test Coverage
+
+| Suite | Tests | Scope |
+|---|---|---|
+| Login | 9 | UI login, Enter key, token-based, negative (4), SQL injection, session |
+| Annual Report | 1 | Request workflow |
+| Process List Approval | 2 | Return from control/approval to rework |
+| Process Map Approval | 3 | Final approval, return from control/approval to rework |
+
+## Conventions
+
+### Naming
+
+- **Page Objects:** camelCase (e.g. `loginPage.js`, `processList.js`)
+- **Classes:** PascalCase (e.g. `LoginPage`, `LoginAPI`)
+- **Assertions:** separate files per page (e.g. `loginPageAsserts.js`, `navigationAssertion.js`)
+
+### Import Pattern
+
+```javascript
+import LoginAPI from '../support/pageObjects/loginAPI';
+import LoginPage from '../support/pageObjects/loginPage';
+import { onLoginPageAsserts } from '../support/pageObjects/loginPageAsserts';
 ```
+
+## Environment Variables
+
+All sensitive values (URLs, credentials) are stored in `.env` and loaded via `dotenv`. See `.env.example` for the full list.
+
+Key groups:
+- **Base URL** — application URL
+- **Credentials** — Admin, User 1, User 2, Director roles
+- **Negative tests** — invalid credentials for login failure scenarios
+- **Security tests** — SQL injection payloads
+
+## Reporting
+
+Tests generate a Mochawesome HTML report with:
+- Pass/fail status per test
+- Screenshots on failure
+- Execution duration
+
+Report output: `cypress/reports/html/`
+
+## Other Root Files
+
+- **`clean.js`** — pre-run cleanup script (screenshots, videos, reports)
+- **`runThreeTimes.js`** — runs test suite 3 times consecutively
+- **`Jenkinsfile`** — Jenkins CI/CD pipeline definition
+- **`.eslintrc.json`** — ESLint configuration
+- **`.prettierrc`** — Prettier configuration
+
+## Author
+
+[**Nikola Nikolić** — QA Automation Engineer](https://github.com/Gzingo)
